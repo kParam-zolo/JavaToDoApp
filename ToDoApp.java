@@ -20,25 +20,17 @@ public class ToDoApp {
 
     static void LisAlltask(){
         if(allTask.size() > 0){
-            System.out.println("Here is the List of All tasks");
-
+            System.out.println('\t' + "Here is the List of All tasks");
+            System.out.println();
             for(int i = 0;i<allTask.size();i++){
-                // System.out.println("TaskId : " + (i + 1));
-                // System.out.println("Description : " +allTask.get(i).description);
-                // System.out.println("Created on : " + allTask.get(i).date);
-                System.out.println(String.format("Taskid : %d , Description: %s ,created on %s",i,allTask.get(i).description,allTask.get(i).date));
+                System.out.println(String.format("Taskid : %d , Description: %s ,created on %s , marked status = %s",i+1,allTask.get(i).description,allTask.get(i).date , (allTask.get(i).marked ? "Marked" : "UnMarked")));
                 System.out.println();
-                System.out.println();
-
             }
         }else{
             System.out.println("No Task to show.");
             System.out.println();
         }
     }
-
-
-    
 
     static void AddTask(String task){
         allTask.add(new Task(task));
@@ -48,39 +40,43 @@ public class ToDoApp {
         return (id > allTask.size() || id < 1 );
     }
 
-    static void retrieveTasks(){
-
-    }
-
-    static void deleteTask(int id){
-        if(invalidId(id)) return;
+    static Boolean deleteTask(int id){
+        if(invalidId(id)) return false;
         id--;
         for(int i = id;i<allTask.size()-1;i++){
             allTask.set(i,allTask.get(i+1));
         }
         allTask.remove(allTask.size()-1);
+        return true;
     }
 
-    static void markTask(int id){
-        if(invalidId(id)) return;
+    static Boolean markTask(int id){
+        if(invalidId(id)) return false;
         id--;
         Task tmp = allTask.get(id);
         tmp.marked = true;
         allTask.set(id,tmp);
+        return true;
     }
 
     static void searchTask(String word){
+        boolean isFound = false;
         for(Task tt: allTask){
             boolean flag = true;
-            for(int i = 0;i<Math.min((int)word.length(),(int)tt.description.length());i++){
-                if(word.charAt(i) != tt.description.charAt(i)){
+            for(int i = 0;i< (int)word.length();i++){
+                if(i >= tt.description.length() || word.charAt(i) != tt.description.charAt(i)){
                     flag = false;
                     break;
                 }
             }
             if(flag){
+                isFound = true;
                 System.out.println("Found a match:\n" + tt.description);
             }
+        }
+        if(!isFound){
+            System.out.println("No matches found. Try Again");
+            System.out.println();
         }
     }
 
@@ -90,17 +86,19 @@ public class ToDoApp {
         System.out.println();
 
         Boolean completed = false;
-        LisAlltask();
+        // LisAlltask();
 
 
         while(!completed){
             
             System.out.println("Here is the List of Options Available");
-            System.out.println("Press 'A' To add a new task");
-            System.out.println("Press 'B' to list of task");
+            System.out.println();
+            System.out.print("Press 'A' To add a new task   ||| " + '\t');
+            System.out.print("Press 'B' to list of task   ||| " + '\t');
             System.out.println("Press 'C' to delete a task");
-            System.out.println("Press 'D' to mark a task completed");
-            System.out.println("Press 'E' to search a task that start with particular word");
+            System.out.print("Press 'D' to mark a task completed   ||| " + '\t');
+            System.out.println("Press 'E' to search a task that start with particular word   ||| " + '\t');
+            System.out.println("Press 'F' to go back");
             System.out.println("Press 'L' to Exit");
             System.out.println();
             
@@ -115,6 +113,7 @@ public class ToDoApp {
                     scan = new Scanner(System.in);
                     String d = scan.nextLine();
                     AddTask(d);
+                    System.out.println("Task Added Successfully");
                     System.out.println();
                     break;
                     
@@ -123,23 +122,32 @@ public class ToDoApp {
                     break;
 
                 case 'C':
-                    System.out.println("Enter the Task Id to delete : ");
+                    System.out.print("Enter the Task Id to delete : ");
                     scan = new Scanner(System.in);
                     int dd = scan.nextInt();
-                    deleteTask(dd);
+                    if(deleteTask(dd)) System.out.println("Deleted Successfully");
+                    else System.out.println("invalid Id given.. try again");
                     break;
                 case 'D':
-                    System.out.println("Enter the Task Id to Mark : ");
+                    System.out.print("Enter the Task Id to Mark : ");
                     scan = new Scanner(System.in);
                     dd = scan.nextInt();
-                    markTask(dd);
+                    if(markTask(dd)){
+                        System.out.println("Successfully Marked task " + dd);
+                    }else System.out.println("Invalid id given.. try again");
                     break;
+
                 case 'E':
-                    System.out.println("Enter the Word to match : ");
+                    System.out.print("Enter the Word to match : ");
                     scan = new Scanner(System.in);
+                    System.out.println();
                     String word = scan.next();
                     searchTask(word);
+                    System.out.println("Searching....");
+                    System.out.println();
                     break;
+                case 'F':
+                    break;                    
                 case 'L':
                     completed = true;
                     break;
