@@ -98,14 +98,12 @@ public class ToDoApp {
             System.out.println("Press 'C' to delete a task");
             System.out.print("Press 'D' to mark a task completed   ||| " + '\t');
             System.out.println("Press 'E' to search a task that start with particular word   ||| " + '\t');
-            System.out.println("Press 'F' to go back");
             System.out.println("Press 'L' to Exit");
             System.out.println();
             
 
-            Scanner scan = new Scanner(System.in);
-            char Options = scan.nextLine().charAt(0);
-
+            char Options = new Scanner(System.in).nextLine().charAt(0);
+            Scanner scan;
 
             switch (Options) {
                 case 'A':
@@ -140,14 +138,12 @@ public class ToDoApp {
                 case 'E':
                     System.out.print("Enter the Word to match : ");
                     scan = new Scanner(System.in);
-                    System.out.println();
                     String word = scan.next();
+                    System.out.println();
                     searchTask(word);
                     System.out.println("Searching....");
                     System.out.println();
-                    break;
-                case 'F':
-                    break;                    
+                    break;                 
                 case 'L':
                     completed = true;
                     break;
